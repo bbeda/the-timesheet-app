@@ -1,4 +1,4 @@
-export default class WorkItem {
-    public day: Date;
-    public work: string;
+export default interface IWorkItem {
+    day: Date;
+    work: string;
 }

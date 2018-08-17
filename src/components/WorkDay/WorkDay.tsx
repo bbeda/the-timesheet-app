@@ -1,11 +1,11 @@
 import * as React from 'react'
 import Moment from 'react-moment'
-import WorkItemEntity from '../../data/WorkItem'
+import IWorkItem from '../../data/WorkItem'
 import WorkItem from '../WorkItem/WorkItem'
 
 
 interface IProps {
-    workItems: WorkItemEntity[]
+    workItems: IWorkItem[]
     day: Date
 }
 

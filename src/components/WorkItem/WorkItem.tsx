@@ -1,16 +1,16 @@
 import Button from '@material-ui/core/Button'
 import * as React from 'react'
-import WorkItemEntity from '../../data/WorkItem'
+import IWorkItem from '../../data/WorkItem'
 
 interface IState {
     isEditing: boolean,
-    workItem: WorkItemEntity
+    workItem: IWorkItem
 }
 
 interface IProps {
-    workItem?: WorkItemEntity,
+    workItem?: IWorkItem,
     isNew?: boolean,
-    onSave?: (workItem: WorkItemEntity) => void
+    onSave?: (workItem: IWorkItem) => void
 }
 
 class WorkItem extends React.Component<IProps, IState> {

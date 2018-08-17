@@ -1,69 +1,37 @@
 import * as moment from 'moment'
 import * as React from 'react'
-import WorkItemEntity from '../../data/WorkItem'
+import WorkDayEntity from '../../data/WorkDay'
+import IWorkItem from '../../data/WorkItem'
 import WorkDay from '../WorkDay/WorkDay'
 import WorkItem from '../WorkItem/WorkItem'
 
 
 
 interface IState {
-    workItems: WorkItemEntity[]
+    workDays: WorkDayEntity[]
 }
 
-interface IWorkDay {
-    day: Date,
-    workItems: WorkItemEntity[]
-}
 
 class Workspace extends React.Component<any, IState> {
     constructor(props: any) {
         super(props);
         this.state = {
-            workItems: [
-                {
-                    day: new Date(2018, 6, 1),
-                    work: "A lot of work 1"
-                },
-                {
-                    day: new Date(2018, 6, 1),
-                    work: "A lot of work 2"
-                },
-                {
-                    day: new Date(2018, 6, 2),
-                    work: "A lot of work 3"
-                }
-            ]
+            workDays: []
         }
     }
 
     public render() {
-        const itemsPerDay = this.state.workItems.reduce<IWorkDay[]>((daysWork, current) => {
-            const currentDateFormat = moment(current.day).format("yyyy-MM-dd");
-
-            let day = daysWork.find(d => moment(d.day).format("yyyy-MM-dd") === currentDateFormat);
-
-            if (day === undefined) {
-                day = {
-                    day: current.day,
-                    workItems: []
-                };
-                daysWork.push(day);
-            }
-
-            day.workItems.push(current);
-
-            return daysWork;
-        }, []).sort((i1, i2) => {
-            if (i1.day < i2.day) {
+        const daysToShow = this.state.workDays.sort((d1, d2) => {
+            if (d1.day > d2.day) {
                 return 1;
-            }
-            else if (i1.day > i2.day) {
+            } else if (d1.day < d2.day) {
                 return -1;
+            } else {
+                return 0;
             }
-            else { return 0; }
         });
 
-        const workDays = itemsPerDay.map((day, index) => {
+        const workDays = daysToShow.map((day, index) => {
             return (
                 <div key={index}>
                     <WorkDay workItems={day.workItems} day={day.day} />
@@ -87,8 +55,28 @@ class Workspace extends React.Component<any, IState> {
         );
     }
 
-    private onNewItem(workItem: WorkItemEntity) {
-        this.setState({ workItems: [...this.state.workItems, workItem] });
+    private onNewItem(workItem: IWorkItem) {
+
+        const workDays = this.state.workDays.slice();
+        let workDay = workDays.find(wd => this.normalizeDate(wd.day) === this.normalizeDate(workItem.day));
+
+        if (workDay === undefined) {
+            workDay = new WorkDayEntity(workItem.day);
+            workDay.workItems = [{ ...workItem }];
+            workDays.push(workDay);
+        } else {
+            const workItems = workDay.workItems.slice();
+            workItems.push(workItem);
+            workDay.workItems = workItems;
+        }
+
+
+
+        this.setState({ workDays });
+    }
+
+    private normalizeDate(d: Date): string {
+        return moment(d).format('yyyy-MM-dd');
     }
 }
 
