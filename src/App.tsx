@@ -1,7 +1,7 @@
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import * as React from 'react';
 import './App.css';
-import Workspace from './components/Workspace/Workspace'
+import Workspace from './components/Project/ProjectTimesheet'
 // import logo from './logo.svg';
 
 
